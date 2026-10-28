@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Profile</title>
+    <!-- Spring Boot uses th:href (file in static/css/). Opening the HTML directly uses href (CSS in the same folder). -->
+    <link rel="stylesheet" href="addprofile.css" th:href="@{/css/addprofile.css}">
+</head>
+<body>
+
+<div class="addprofile-wrapper">
+
+    <header class="addprofile-header">
+        <h1>Employee Profile</h1>
+        <p th:text="${employee.id != null} ? 'Update employee details' : 'Add a new employee'">Add a new employee</p>
+    </header>
+
+    <!-- Success message -->
+    <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+
+    <!-- ================= FORM ================= -->
+    <section class="addprofile-card">
+        <form th:action="@{/addprofile}" th:object="${employee}" method="post"
+              enctype="multipart/form-data" id="profileForm" novalidate>
+
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="employeeId">Employee ID</label>
+                    <input type="text" id="employeeId" th:field="*{employeeId}" placeholder="e.g. 1001" inputmode="numeric" maxlength="9">
+                    <span class="error" th:if="${#fields.hasErrors('employeeId')}" th:errors="*{employeeId}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="employeeName">Employee Name</label>
+                    <input type="text" id="employeeName" th:field="*{employeeName}" placeholder="Full name">
+                    <span class="error" th:if="${#fields.hasErrors('employeeName')}" th:errors="*{employeeName}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" th:field="*{dob}">
+                    <span class="error" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" th:field="*{gender}">
+                        <option value="">-- Select Gender --</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span class="error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" th:field="*{phone}" placeholder="10-digit mobile number" maxlength="10">
+                    <span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <input type="text" id="department" th:field="*{department}" placeholder="e.g. Finance">
+                    <span class="error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+                    <input type="text" id="designation" th:field="*{designation}" placeholder="e.g. Manager">
+                    <span class="error" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="joiningDate">Joining Date</label>
+                    <input type="date" id="joiningDate" th:field="*{joiningDate}">
+                    <span class="error" th:if="${#fields.hasErrors('joiningDate')}" th:errors="*{joiningDate}"></span>
+                </div>
+
+                <div class="form-group full">
+                    <label for="address">Employee Address</label>
+                    <textarea id="address" rows="3" th:field="*{address}" placeholder="Full address"></textarea>
+                    <span class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+                </div>
+
+                <div class="form-group full">
+                    <label for="photo">Profile Image <small>(JPG / PNG, max 100 KB)</small></label>
+                    <div class="upload-row">
+                        <input type="file" id="photo" name="photo" accept="image/png, image/jpeg">
+                        <img id="preview" class="preview" alt=""
+                             th:if="${employee.id != null and employee.imageData != null}"
+                             th:src="@{/addprofile/image/{id}(id=${employee.id})}">
+                        <img id="preview" class="preview hidden" alt=""
+                             th:unless="${employee.id != null and employee.imageData != null}">
+                    </div>
+                    <span class="error" id="photoError" th:text="${imageError}"></span>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-submit"
+                        th:text="${employee.id != null} ? 'Update' : 'Submit'">Submit</button>
+                <a th:if="${employee.id != null}" th:href="@{/addprofile}" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </section>
+
+    <!-- ================= TABLE ================= -->
+    <section class="addprofile-card">
+        <h2 class="table-title">All Employees</h2>
+        <div class="table-responsive">
+            <table class="addprofile-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th>Employee ID</th>
+                    <th>Name</th>
+                    <th>DOB</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Joining Date</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e, stat : ${employees}">
+                    <td th:text="${stat.count}">1</td>
+                    <td>
+                        <img class="thumb" th:if="${e.imageData != null}"
+                             th:src="@{/addprofile/image/{id}(id=${e.id})}" alt="Employee">
+                        <span th:unless="${e.imageData != null}">—</span>
+                    </td>
+                    <td th:text="${e.employeeId}"></td>
+                    <td th:text="${e.employeeName}"></td>
+                    <td th:text="${#temporals.format(e.dob, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${e.gender}"></td>
+                    <td th:text="${e.phone}"></td>
+                    <td th:text="${e.department}"></td>
+                    <td th:text="${e.designation}"></td>
+                    <td th:text="${#temporals.format(e.joiningDate, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${e.address}"></td>
+                    <td>
+                        <a class="btn btn-update" th:href="@{/addprofile(id=${e.id})}">Update</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(employees)}">
+                    <td colspan="12" class="empty">No employees added yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<!-- Spring Boot uses th:src (file in static/js/). Opening the HTML directly uses src (JS in the same folder). -->
+<script src="addPro.js" th:src="@{/js/addPro.js}"></script>
+</body>
+</html>

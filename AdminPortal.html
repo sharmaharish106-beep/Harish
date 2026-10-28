@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminPortal</title>
+  <link rel="stylesheet" href="adminportal.css">
+</head>
+<body>
+
+  <!-- Sidebar links -->
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>Admin<span>Portal</span></h1>
+      <p>School management system</p>
+    </div>
+
+    <ul class="menu">
+      <li><a href="AdminPortal.html" data-home class="active"><span class="ico">🏠</span>Dashboard</a></li>
+      <li><a href="Employeeprofile.html" target="content"><span class="ico">👤</span>Admin Profile</a></li>
+      <li><a href="studentregistration.html" target="content"><span class="ico">🎓</span>Student Registration</a></li>
+      <li><a href="facultyregistration.html" target="content"><span class="ico">🧑‍🏫</span>Faculty Registration</a></li>
+      <li><a href="permission.html" target="content"><span class="ico">🔐</span>Permission</a></li>
+      <li><a href="result.html" target="content"><span class="ico">📊</span>Result</a></li>
+      <li><a href="marksheet.html" target="content"><span class="ico">📄</span>Marksheet</a></li>
+      <li><a href="accountmanagement.html" target="content"><span class="ico">💳</span>Account Management</a></li>
+      <li><a href="employeeinfo.html" target="content"><span class="ico">💼</span>Employee Info</a></li>
+      <li><a href="studentinfo.html" target="content"><span class="ico">📋</span>Student Info</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main area -->
+  <div class="main" id="main">
+    <header class="topbar">
+      <h2 id="pageTitle">Dashboard</h2>
+      <div class="user"><span>Administrator</span><div class="avatar">A</div></div>
+    </header>
+
+    <main class="content">
+      <!-- Home cards (links also shown here) -->
+      <section class="home">
+        <div class="welcome">
+          <h3>Welcome, Admin</h3>
+          <p></p>
+        </div>
+
+        <div class="grid">
+          <a class="tile" href="Employeeprofile.html" target="content"><div class="ico">👤</div><h4>Admin Profile</h4><p>View and update your details.</p></a>
+          <a class="tile" href="studentregistration.html" target="content"><div class="ico">🎓</div><h4>Student Registration</h4><p>Register new students.</p></a>
+          <a class="tile" href="facultyregistration.html" target="content"><div class="ico">🧑‍🏫</div><h4>Faculty Registration</h4><p>Register new faculty members.</p></a>
+          <a class="tile" href="permission.html" target="content"><div class="ico">🔐</div><h4>Permission</h4><p>Control who can access what.</p></a>
+          <a class="tile" href="result.html" target="content"><div class="ico">📊</div><h4>Result</h4><p>Add exam results.</p></a>
+          <a class="tile" href="marksheet.html" target="content"><div class="ico">📄</div><h4>Marksheet</h4><p>Create student marksheets.</p></a>
+          <a class="tile" href="accountmanagement.html" target="content"><div class="ico">💳</div><h4>Account Management</h4><p>Manage fees and accounts.</p></a>
+          <a class="tile" href="employeeinfo.html" target="content"><div class="ico">💼</div><h4>Employee Info</h4><p>Add and view employee records.</p></a>
+          <a class="tile" href="studentinfo.html" target="content"><div class="ico">📋</div><h4>Student Info</h4><p>Add and view student records.</p></a>
+        </div>
+      </section>
+
+      <!-- Linked pages open here (same page) -->
+      <section class="viewer">
+        <iframe name="content" title="Portal page"></iframe>
+      </section>
+    </main>
+
+    <footer class="footer">© 2026 AdminPortal. All rights reserved.</footer>
+  </div>
+
+  <script>
+    var body = document.getElementById("main");
+    var title = document.getElementById("pageTitle");
+    var menuLinks = document.querySelectorAll(".menu a");
+
+    // Mark menu link active when a link is opened inside the portal
+    document.querySelectorAll('a[target="content"]').forEach(function (link) {
+      link.addEventListener("click", function () {
+        body.classList.add("show-viewer");
+        var href = link.getAttribute("href");
+        menuLinks.forEach(function (m) {
+          m.classList.toggle("active", m.getAttribute("href") === href);
+        });
+        var active = document.querySelector('.menu a[href="' + href + '"]');
+        title.textContent = active ? active.textContent.trim() : "AdminPortal";
+      });
+    });
+
+    // Dashboard link returns to home cards without reloading
+    document.querySelector("[data-home]").addEventListener("click", function (e) {
+      e.preventDefault();
+      body.classList.remove("show-viewer");
+      title.textContent = "Dashboard";
+      menuLinks.forEach(function (m) { m.classList.remove("active"); });
+      this.classList.add("active");
+    });
+  </script>
+</body>
+</html>

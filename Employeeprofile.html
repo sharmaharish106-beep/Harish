@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee Profile</title>
+  <link rel="stylesheet" href="Employeeprofile.css">
+</head>
+<body>
+
+  <header class="header">
+    <h1>Employee Profile</h1>
+  </header>
+
+  <div class="wrapper">
+    <div class="card">
+
+      <!-- Tabs (add each page link in the href) -->
+      <nav class="tabs" role="tablist">
+        <a class="tab active" href="#"><span class="ico">👤</span>Add Profile</a>
+        <a class="tab" href="#"><span class="ico"></span>Research Work</a>
+        <a class="tab" href="#"><span class="ico">🎓</span>Education</a>
+      </nav>
+
+    </div>
+  </div>
+
+  <script>
+    var tabs = document.querySelectorAll(".tab");
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function (e) {
+        if (tab.getAttribute("href") === "#") e.preventDefault();
+        tabs.forEach(function (t) { t.classList.remove("active"); });
+        tab.classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
